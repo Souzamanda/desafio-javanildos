@@ -23,7 +23,7 @@ public class AccountType {
         SALARIO(4L),
         JURIDICA(5L);
 
-        long typeId;
+        final long typeId;
 
         public long getTypeId() {
             return typeId;
