@@ -8,7 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,13 +25,7 @@ public class UserService {
     }
 
     public String updateUser(String cpf, CreateUserDto payload) {
-        Optional<User> userObject = userRepository.findUserByCpf(cpf);
-
-        if(userObject.isEmpty()) {
-            return "Usuário não existe";
-        }
-
-        var user = userObject.get();
+        var user = getUserByCPF(cpf);
         BeanUtils.copyProperties(payload, user);
         userRepository.save(user);
 
@@ -39,13 +33,17 @@ public class UserService {
     }
 
     public String deleteUser(String cpf) {
-        Optional<User> userObject = userRepository.findUserByCpf(cpf);
+        var user = getUserByCPF(cpf);
 
-        if(userObject.isEmpty()) {
-            return "Usuário não existe";
-        }
-
-        userRepository.delete(userObject.get());
+        userRepository.delete(user);
         return "Usuário deletado.";
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserByCPF(String cpf) {
+        return userRepository.findUserByCpf(cpf).orElseThrow(() -> new RuntimeException("Não existe usuário cadastrado com esse CPF."));
     }
 }
