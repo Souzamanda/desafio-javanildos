@@ -22,9 +22,17 @@ public class User {
     @Column(name = "user_id")
     private UUID userId;
 
+    @Column(nullable = false)
     private String name;
-    private Long cpf;
+
+    @Column(unique = true, nullable = false)
+    private String cpf;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Account> accounts = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return  "Nome: " + name + ", CPF: " + cpf + ", Contas: " + accounts;
+    }
 }
